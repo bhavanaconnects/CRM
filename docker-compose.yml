@@ -1,0 +1,46 @@
+# Uses your EXISTING PostgreSQL data. Point POSTGRES_* at your current
+# database (or remove the `postgres` service entirely and set
+# DATABASE_URL in backend/.env to your existing external database) --
+# this file does NOT run any destructive migration on start.
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: crm_user
+      POSTGRES_PASSWORD: crm_password
+      POSTGRES_DB: crm
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U crm_user -d crm"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    volumes:
+      # Named volume so existing data persists across `docker compose down`.
+      # If you already have a running Postgres with your real data, delete
+      # this service and point backend's DATABASE_URL at it instead.
+      - crm_postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+
+volumes:
+  crm_postgres_data:

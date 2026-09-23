@@ -1,0 +1,13 @@
+{
+  "name": "crm-ui-tests",
+  "private": true,
+  "description": "Loads each migrated page in a real DOM against the live API and drives UI interactions.",
+  "scripts": {
+    "test:pages": "node run.js",
+    "test:interact": "node interact.js"
+  },
+  "dependencies": {
+    "jsdom": "^24.0.0",
+    "tough-cookie": "^4.1.4"
+  }
+}

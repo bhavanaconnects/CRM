@@ -1,0 +1,5 @@
+/* Ported from src/app/globals.css (Tailwind base is loaded via CDN in each
+   page's <head>; this file only carries the non-utility overrides). */
+html, body { height: 100%; }
+body { background-color: #F7F9FC; color: #0B1E3D; -webkit-font-smoothing: antialiased; }
+* { border-color: #E4E9F2; }
